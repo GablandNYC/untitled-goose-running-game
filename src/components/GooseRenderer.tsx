@@ -7,6 +7,7 @@ import { Billboard, Text, useGLTF, useAnimations } from "@react-three/drei";
 import { IsGoose, Player, RaceProgress, Ref } from "@/core/traits";
 
 const GOOSE_MODEL_PATH = "/assets/models/goose.glb";
+const GOOSE_FONT_URL = "/assets/fonts/LilitaOne-Regular.ttf";
 
 function GooseView({ entity, name }: { entity: Entity; name: string }) {
   const { scene, animations } = useGLTF(GOOSE_MODEL_PATH);
@@ -58,10 +59,11 @@ function GooseView({ entity, name }: { entity: Entity; name: string }) {
       <primitive object={clone} rotation={[0, Math.PI / 2, 0]} castShadow />
       <Billboard position={[0, 2.2, 0]} follow>
         <Text
+          font={GOOSE_FONT_URL}
           fontSize={0.35}
-          color="#ffffff"
-          outlineWidth={0.04}
-          outlineColor="#111111"
+          color="#fffbe6"
+          outlineWidth={0.05}
+          outlineColor="#4a3520"
           anchorX="center"
           anchorY="bottom"
         >
