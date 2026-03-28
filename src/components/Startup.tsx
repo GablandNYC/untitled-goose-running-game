@@ -13,12 +13,14 @@ export function Startup() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    const geese = Array.from({ length: PLAYER_COUNT }, (_, i) =>
-      spawnGoose({ index: i, ...(i === 0 ? { name: playerName || undefined, self: true } : {}) }),
-    );
+    const selfGooseIndex = 0;
+    const geese = Array.from({ length: PLAYER_COUNT }, (_, i) => {
+      if (i === selfGooseIndex) return spawnGoose({ index: i, name: playerName, self: true });
+      return spawnGoose({ index: i });
+    });
+
     const grass = spawnGrassAlongTrack();
-    const selfGoose = geese[0];
-    const camera = spawnCamera(selfGoose);
+    const camera = spawnCamera(geese[selfGooseIndex]);
 
     return () => {
       camera.destroy();
