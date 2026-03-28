@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useQuery } from "koota/react";
+import { useQuery, useTraitEffect } from "koota/react";
 import type { Entity } from "koota";
 import { Group } from "three";
 import { SkeletonUtils } from "three/examples/jsm/Addons.js";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { IsGoose, Ref } from "@/core/traits";
+import { IsGoose, RaceProgress, Ref } from "@/core/traits";
 
 const GOOSE_MODEL_PATH = "/assets/models/goose.glb";
 
@@ -27,11 +27,19 @@ function GooseView({ entity }: { entity: Entity }) {
     actions["GooseRun"]?.reset().fadeIn(0.2).play();
   }, [actions]);
 
+  useTraitEffect(entity, RaceProgress, (progress) => {
+    if (progress && progress.value >= 1) {
+      actions["GooseRun"]?.fadeOut(0.3);
+    }
+  });
+
   return (
-    <group ref={(node) => {
-      (groupRef as React.MutableRefObject<Group | null>).current = node;
-      handleInit(node);
-    }}>
+    <group
+      ref={(node) => {
+        (groupRef as React.MutableRefObject<Group | null>).current = node;
+        handleInit(node);
+      }}
+    >
       <primitive object={clone} rotation={[0, Math.PI / 2, 0]} castShadow />
     </group>
   );
@@ -41,7 +49,6 @@ useGLTF.preload(GOOSE_MODEL_PATH);
 
 export function GooseRenderer() {
   const geese = useQuery(IsGoose);
-  console.log(geese)
   return (
     <>
       {geese.map((entity) => (
