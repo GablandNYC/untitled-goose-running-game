@@ -37,7 +37,7 @@ function CameraView({ entity }: { entity: Entity }) {
   }, [size]);
 
   return (
-    <orthographicCamera ref={handleInit} near={-100} far={100} zoom={100} />
+    <orthographicCamera ref={handleInit} near={-100} far={100} zoom={70} />
   );
 }
 
