@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { GooseRenderer } from "./GooseRenderer";
+import { GrassRenderer } from "./GrassRenderer";
 import { TrackRenderer } from "./TrackRenderer";
 import { CameraRenderer } from "./CameraRenderer";
 import { Frameloop } from "./Frameloop";
@@ -12,6 +13,7 @@ const Scene = () => {
     >
       <group rotation={[0, Math.PI / 2, 0]}>
         <TrackRenderer />
+        <GrassRenderer />
         <GooseRenderer />
         <CameraRenderer />
       </group>
