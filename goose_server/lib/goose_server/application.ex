@@ -11,9 +11,8 @@ defmodule GooseServer.Application do
       GooseServerWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:goose_server, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: GooseServer.PubSub},
-      # Start a worker by calling: GooseServer.Worker.start_link(arg)
-      # {GooseServer.Worker, arg},
-      # Start to serve requests, typically the last entry
+      GooseServerWeb.Presence,
+      GooseServer.GameRegistry,
       GooseServerWeb.Endpoint
     ]
 
