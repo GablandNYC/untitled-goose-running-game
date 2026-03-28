@@ -23,14 +23,28 @@ function GooseView({ entity }: { entity: Entity }) {
     [entity],
   );
 
+  const timeOffset = useMemo(() => {
+    const id = entity.id();
+    const hash = Math.sin(id * 9301 + 49297) * 49267;
+    return (hash - Math.floor(hash)) * 2;
+  }, [entity]);
+
   useEffect(() => {
-    actions["GooseRun"]?.reset().fadeIn(0.2).play();
-  }, [actions]);
+    const run = actions["GooseRun"];
+    if (!run) return;
+    run.reset().fadeIn(0.2).play();
+    // eslint-disable-next-line react-hooks/immutability
+    run.time = timeOffset;
+  }, [actions, timeOffset]);
 
   useTraitEffect(entity, RaceProgress, (progress) => {
     if (progress && progress.value >= 1) {
       actions["GooseRun"]?.fadeOut(0.3);
-      actions["GooseIdle"]?.reset().fadeIn(0.2).play();
+      const idle = actions["GooseIdle"];
+      if (!idle) return;
+      idle.reset().fadeIn(0.2).play();
+      // eslint-disable-next-line react-hooks/immutability
+      idle.time = timeOffset;
     }
   });
 
