@@ -3,12 +3,12 @@ import { useQuery, useTraitEffect } from "koota/react";
 import type { Entity } from "koota";
 import { Group } from "three";
 import { SkeletonUtils } from "three/examples/jsm/Addons.js";
-import { useGLTF, useAnimations } from "@react-three/drei";
-import { IsGoose, RaceProgress, Ref } from "@/core/traits";
+import { Billboard, Text, useGLTF, useAnimations } from "@react-three/drei";
+import { IsGoose, Player, RaceProgress, Ref } from "@/core/traits";
 
 const GOOSE_MODEL_PATH = "/assets/models/goose.glb";
 
-function GooseView({ entity }: { entity: Entity }) {
+function GooseView({ entity, name }: { entity: Entity; name: string }) {
   const { scene, animations } = useGLTF(GOOSE_MODEL_PATH);
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const groupRef = useRef<Group>(null);
@@ -56,6 +56,18 @@ function GooseView({ entity }: { entity: Entity }) {
       }}
     >
       <primitive object={clone} rotation={[0, Math.PI / 2, 0]} castShadow />
+      <Billboard position={[0, 2.2, 0]} follow>
+        <Text
+          fontSize={0.35}
+          color="#ffffff"
+          outlineWidth={0.04}
+          outlineColor="#111111"
+          anchorX="center"
+          anchorY="bottom"
+        >
+          {name}
+        </Text>
+      </Billboard>
     </group>
   );
 }
@@ -63,11 +75,11 @@ function GooseView({ entity }: { entity: Entity }) {
 useGLTF.preload(GOOSE_MODEL_PATH);
 
 export function GooseRenderer() {
-  const geese = useQuery(IsGoose);
+  const geese = useQuery(IsGoose, Player);
   return (
     <>
       {geese.map((entity) => (
-        <GooseView key={entity.id()} entity={entity} />
+        <GooseView key={entity.id()} entity={entity} name={entity.get(Player)?.name ?? "Goose"} />
       ))}
     </>
   );

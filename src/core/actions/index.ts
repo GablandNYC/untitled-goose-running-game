@@ -17,6 +17,8 @@ import { trackCurve } from "../track";
 const GRASS_SAMPLES = 30;
 const PATCHES_PER_SIDE = 3;
 const TRACK_HALF_WIDTH = 2.2;
+const GOOSE_NAME_PREFIXES = ["Captain", "Silly", "Waddle", "Turbo", "Lucky", "Honks"];
+const GOOSE_NAME_SUFFIXES = ["Feather", "Beak", "Wing", "Paddle", "Sprint", "McHonk"];
 const _pt = new THREE.Vector3();
 const _tan = new THREE.Vector3();
 const _normal = new THREE.Vector3();
@@ -27,13 +29,21 @@ function seededRandom(seed: number) {
   return x - Math.floor(x);
 }
 
+function randomGooseName(index: number) {
+  const prefix =
+    GOOSE_NAME_PREFIXES[Math.floor(Math.random() * GOOSE_NAME_PREFIXES.length)];
+  const suffix =
+    GOOSE_NAME_SUFFIXES[Math.floor(Math.random() * GOOSE_NAME_SUFFIXES.length)];
+  return `${prefix} ${suffix}`;
+}
+
 export const actions = createActions((world) => ({
-  spawnGoose: (index: number) => {
+  spawnGoose: ({ index, name }: { index: number; name?: string }) => {
     return world.spawn(
       Position,
       IsGoose,
       RaceProgress({ value: 0 }),
-      Player({ index }),
+      Player({ index, name: name ?? randomGooseName(index) }),
     );
   },
   spawnGrassAlongTrack: () => {

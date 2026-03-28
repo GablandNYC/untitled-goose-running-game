@@ -8,7 +8,7 @@ export function Startup() {
   const { spawnGoose, spawnGrassAlongTrack, spawnCamera } = useActions(actions);
 
   useEffect(() => {
-    const geese = Array.from({ length: PLAYER_COUNT }, (_, i) => spawnGoose(i));
+    const geese = Array.from({ length: PLAYER_COUNT }, (_, i) => spawnGoose({ index: i }));
     const grass = spawnGrassAlongTrack();
     const camera = spawnCamera(geese[0]);
     return () => {
