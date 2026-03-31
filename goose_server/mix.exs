@@ -76,10 +76,10 @@ defmodule GooseServer.MixProject do
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["compile", "tailwind goose_server", "esbuild goose_server"],
       "assets.deploy": [
-        "tailwind goose_server --minify",
-        "esbuild goose_server --minify",
+        "frontend.build",
         "phx.digest"
       ],
+      "frontend.build": ["cmd bash -c 'cd .. && npx next build && cp -r out/* goose_server/priv/static/'"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end

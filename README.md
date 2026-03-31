@@ -1,40 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Untitled Goose Running Game
 
-## Getting Started
+A multiplayer goose racing game built with React Three Fiber and Phoenix.
 
-First, run the development server:
+Players join a lobby, create or join a game, and race their geese by alternating Q and P keys. Goose positions sync in real-time via Phoenix channels. Empty slots are filled with AI geese.
+
+## Prerequisites
+
+- Node.js (v18+)
+- Elixir (v1.15+) and Erlang/OTP
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+make setup   # install all dependencies
+make dev     # start both servers for development
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 to play.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Development
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+`make dev` starts both servers in parallel:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- **Frontend** (Next.js) on port 3000 -- hot-reloads on file changes
+- **Server** (Phoenix) on port 4000 -- handles WebSocket channels
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can also run them individually:
 
-## Learn More
+```bash
+make dev.frontend   # just the Next.js dev server
+make dev.server     # just the Phoenix server
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Production / Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Build the frontend and serve everything from Phoenix on a single port:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+make deploy   # build frontend + copy to Phoenix + digest
+make serve    # start Phoenix on port 4000, serves the game at /
+```
 
-## Deploy on Vercel
+The `deploy` target:
+1. Builds the Next.js app as a static export
+2. Copies the output into Phoenix's `priv/static/`
+3. Runs `mix phx.digest` for gzip and cache manifests
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+In production, set these environment variables:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+```bash
+SECRET_KEY_BASE=<generate with `mix phx.gen.secret`>
+PHX_HOST=yourdomain.com
+PORT=4000          # optional, defaults to 4000
+PHX_SERVER=true    # starts the server on boot
+```
+
+## Testing
+
+```bash
+make test   # run server tests
+```
+
+## Project Structure
+
+```
+src/                    # Frontend (React Three Fiber)
+  components/           # Scene, GooseRenderer, Lobby, etc.
+  core/                 # ECS traits, systems, actions
+  lib/                  # Socket and game-socket clients
+  pages/                # Next.js page (single page app)
+goose_server/           # Backend (Phoenix)
+  lib/goose_server_web/ # Channels, controllers, endpoint
+  lib/goose_server/     # Game registry
+  test/                 # ExUnit tests
+```
+
+## Makefile Reference
+
+| Command | Description |
+|---------|-------------|
+| `make setup` | Install all dependencies |
+| `make dev` | Start frontend + server for development |
+| `make build` | Build frontend into Phoenix static |
+| `make deploy` | Full production build with digest |
+| `make serve` | Start production server (port 4000) |
+| `make test` | Run all tests |
+| `make clean` | Remove build artifacts |

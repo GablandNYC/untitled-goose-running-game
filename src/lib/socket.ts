@@ -1,7 +1,7 @@
 import { Socket, Presence, Channel } from "phoenix";
 
 const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL || "ws://localhost:4000/socket";
+  process.env.NEXT_PUBLIC_SOCKET_URL || "/socket";
 
 let socket: Socket | null = null;
 let playerId: string | null = null;
