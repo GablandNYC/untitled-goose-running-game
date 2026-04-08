@@ -86,3 +86,12 @@ goose_server/           # Backend (Phoenix)
 | `make serve` | Start production server (port 4000) |
 | `make test` | Run all tests |
 | `make clean` | Remove build artifacts |
+
+## BUGS:
+- [ ] when a client is refused entry it should go back to a connect screen and not retry forever
+- [ ] clients should remove games when they are deleted in real time
+- [ ] when a player is in the game waiting room the number of players should be accurate (both on enter and leave)
+- [ ] when a game ends, it should be deleted
+
+## TODO:
+- [ ] players should need to denote when they are ready before the game can start
